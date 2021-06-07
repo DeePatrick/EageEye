@@ -19,8 +19,7 @@ namespace EageEye.Controllers
         string line;
         List<MovieDTO> movies = new List<MovieDTO>();
         List<Stats> stats = new List<Stats>();
-        List<Movie> moviesDB = new List<Movie>();
-        List<ConsolidatedMovies> allMovieStats = new List<ConsolidatedMovies>();
+        private List<Movie> DataBase = new List<Movie>();
         public MoviesController(IWebHostEnvironment environment)
         {
             _hostingEnvironment = environment;
@@ -74,7 +73,7 @@ namespace EageEye.Controllers
 
             var results = from p in statResult
                           group p.WatchDurationMs by p.MovieId into g
-                          select new { MovieId = g.Key, Watches = g.ToList() };
+                          select new { MovieId = g.Key, Watches = g.ToList()};
 
 
 
@@ -86,15 +85,12 @@ namespace EageEye.Controllers
                                 { 
                                     MovieId = int.Parse(item.MovieId),
                                     Title = item1.Title ,  
-                                    AverageWatchDurationS = item1.AverageWatchDurationS, 
-                                    Watches = item.Watches, 
+                                    AverageWatchDurationS = item1.AverageWatchDurationS,
+                                    Watches = item.Watches.Count(),
                                     ReleaseYear = int.Parse(item1.ReleaseYear)
-                                }).Take(5).ToList();
-
-
-
-
-
+                                })
+                .OrderByDescending(m => m.ReleaseYear)
+                .ToList();
 
             return finalList;
         }
@@ -125,14 +121,15 @@ namespace EageEye.Controllers
             return newresults;
         }
 
-        //// POST /metadata
-        //[HttpPost]
-        //[Route("/metadata")]
-        //public ActionResult Create(Movie movie)
-        //{
-        //    return View();
-        //}
-
+        // POST /metadata
+        [HttpPost]
+        [Route("/metadata")]
+        public ActionResult<List<Movie>> Post(Movie movie)
+        {         
+            DataBase.Add(movie);
+            //await DataBase.Save();
+            return DataBase;
+        }
 
 
     }
