@@ -9,5 +9,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\metadata.csv" />
+    <None Include="wwwroot\stats.csv" />
+  </ItemGroup>
+
 
 </Project>
